@@ -1,0 +1,134 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information stored upon authentication",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique Firebase Authentication UID",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 256
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name",
+          "maxLength": 128
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Avatar photo URL",
+          "maxLength": 1024
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of account creation",
+          "maxLength": 64
+        },
+        "lastLoginAt": {
+          "type": "string",
+          "description": "ISO timestamp of last sign in",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "email", "createdAt"]
+    },
+    "ToolHistoryItem": {
+      "title": "ToolHistoryItem",
+      "description": "Record of a tool operation performed by the user",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique history item ID",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner UID",
+          "maxLength": 128
+        },
+        "toolId": {
+          "type": "string",
+          "description": "Identifier of the PDF or conversion tool",
+          "maxLength": 64
+        },
+        "toolName": {
+          "type": "string",
+          "description": "Human readable name of the tool",
+          "maxLength": 128
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Source or output file name",
+          "maxLength": 256
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "File size in bytes"
+        },
+        "resultSize": {
+          "type": "number",
+          "description": "Resulting file size in bytes"
+        },
+        "pageCount": {
+          "type": "number",
+          "description": "Number of pages processed"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the operation",
+          "enum": ["success", "failed"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp when the operation completed",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "userId", "toolId", "toolName", "fileName", "status", "createdAt"]
+    },
+    "UserFavorite": {
+      "title": "UserFavorite",
+      "description": "A tool favorited by the user",
+      "type": "object",
+      "properties": {
+        "toolId": {
+          "type": "string",
+          "description": "Identifier of the tool",
+          "maxLength": 64
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner UID",
+          "maxLength": 128
+        },
+        "addedAt": {
+          "type": "string",
+          "description": "ISO timestamp when favorited",
+          "maxLength": 64
+        }
+      },
+      "required": ["toolId", "userId", "addedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document accessible only to the owner"
+    },
+    "/users/{userId}/history/{historyId}": {
+      "schema": "ToolHistoryItem",
+      "description": "User's private history of processed documents"
+    },
+    "/users/{userId}/favorites/{toolId}": {
+      "schema": "UserFavorite",
+      "description": "User's favorited tools list"
+    }
+  }
+}
